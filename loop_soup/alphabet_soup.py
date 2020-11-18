@@ -38,8 +38,25 @@ from collections import Counter
 
 def is_it_a_good_soup(message: str, soup: str) -> bool:
     m = Counter(filter(lambda x: x.isalpha(), list(message)))
-    s = Counter(list(soup))
+    s = Counter(iter(soup))
     for k, v in m.items():
         if v > s[k]:
             return False
     return True
+
+
+def is_it_a_good_soup_review(message: str, soup: str) -> bool:
+    m = Counter(filter(lambda x: x.isalpha(), list(message)))
+    s = iter(soup)
+    for letter in s:
+        letter_counter = m.get(letter, 0)
+        if letter_counter > 1:
+            m[letter] -= 1
+        else:
+            try:
+                m.pop(letter)
+            except KeyError:
+                pass
+        if not m:
+            return True
+    return False
